@@ -52,4 +52,9 @@ public class JobController {
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
+    @PostMapping("jobs/createmany")
+    public ResponseEntity<String> createManyJobs(@RequestBody List<Job> jobs){
+        jobService.createJobs(jobs);
+        return null;
+    }
 }

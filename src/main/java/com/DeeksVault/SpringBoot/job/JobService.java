@@ -12,4 +12,6 @@ public interface JobService {
     boolean deleteJob(Long id);
 
     boolean updateJob(Long id , Job job);
+
+    void createJobs(List<Job> jobs);
 }

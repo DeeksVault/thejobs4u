@@ -1,5 +1,8 @@
 package com.DeeksVault.SpringBoot.job.implementation;
 
+import com.DeeksVault.SpringBoot.company.Company;
+import com.DeeksVault.SpringBoot.company.CompanyRepository;
+import com.DeeksVault.SpringBoot.company.CompanyService;
 import com.DeeksVault.SpringBoot.job.Job;
 import com.DeeksVault.SpringBoot.job.JobRepository;
 import com.DeeksVault.SpringBoot.job.JobService;
@@ -14,12 +17,14 @@ import java.util.Optional;
 public class JobServiceImplementation implements JobService {
 
     JobRepository jobRepository;
+    CompanyRepository companyRepository;
 
-    public JobServiceImplementation(JobRepository jobRepository) {
+    public JobServiceImplementation(JobRepository jobRepository, CompanyRepository companyRepository) {
         this.jobRepository = jobRepository;
+        this.companyRepository = companyRepository;
     }
 
-//    private List<Job> jobs = new ArrayList<>();
+    //    private List<Job> jobs = new ArrayList<>();
     @Override
     public List<Job> getJobs() {
         return jobRepository.findAll();
@@ -31,16 +36,16 @@ public class JobServiceImplementation implements JobService {
     }
 
     @Override
-    public Job getJobById(Long id){
+    public Job getJobById(Long id) {
         return jobRepository.findById(id).orElse(null);
     }
 
     @Override
     public boolean deleteJob(Long id) {
-        if(!jobRepository.findById(id).isPresent()){
+        if (!jobRepository.findById(id).isPresent()) {
             return false;
         }
-        try{
+        try {
             jobRepository.deleteById(id);
             return true;
         } catch (Exception e) {
@@ -68,4 +73,24 @@ public class JobServiceImplementation implements JobService {
         return false;
     }
 
+    @Override
+    public void createJobs(List<Job> jobs) {
+        for (Job job : jobs) {
+            Company company = companyRepository.findByName(job.getTitle());
+            if (company == null) {
+                company = job.getCompany();
+                companyRepository.save(company);
+                Job newJob = new Job();
+                newJob.setTitle(job.getTitle());
+                newJob.setDescription(job.getDescription());
+                newJob.setMaxSalary(job.getMaxSalary());
+                newJob.setMinSalary(job.getMinSalary());
+                newJob.setLocation(job.getLocation());
+                newJob.setCompany(company);
+
+                jobRepository.save(job);
+            }
+
+        }
+    }
 }

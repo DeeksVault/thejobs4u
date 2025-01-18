@@ -17,9 +17,6 @@ public class ReviewServiceImplementation implements ReviewService {
     private ReviewRepository reviewRepository;
     private CompanyService companyService;
 
-    public ReviewServiceImplementation() {
-    }
-
     public ReviewServiceImplementation(ReviewRepository reviewRepository, CompanyService companyService) {
         this.reviewRepository = reviewRepository;
         this.companyService = companyService;
@@ -34,23 +31,16 @@ public class ReviewServiceImplementation implements ReviewService {
     }
 
     @Override
-    public void createReviewForCompany(Long companyId , Review review){
+    public Review createReviewForCompany(Long companyId , Review review){
         Company company = companyService.getCompanyById(companyId);
         review.setCompany(company);
         reviewRepository.save(review);
+        return review;
     }
 
     @Override
-    public Review getReviewByCompanyId(Long companyId , Long reviewId){
-        if(companyService.getCompanyById(companyId)!=null){
-            List<Review> reviews = reviewRepository.findByCompanyId(companyId);
-            for(Review review : reviews){
-                if(review.getId().equals(reviewId)){
-                    return review;
-                }
-            }
-        }
-        return null;
+    public Review getReview(Long companyId , Long reviewId){
+        return reviewRepository.findById(reviewId).orElse(null);
     }
 
     @Override
@@ -60,7 +50,16 @@ public class ReviewServiceImplementation implements ReviewService {
     }
 
     @Override
-    public boolean deleteReview(){
+    public boolean deleteReview(Long reviewId){
+        if(reviewRepository.findById(reviewId).isPresent()){
+            try{
+                reviewRepository.deleteById(reviewId);
+                return true;
+            }
+            catch(Exception e){
+                return false;
+            }
+        }
         return false;
     }
 
