@@ -12,9 +12,11 @@ import java.util.List;
 public class CompanyController {
 
     CompanyService companyService;
+    CompanyRepository companyRepository;
 
-    public CompanyController(CompanyService companyService) {
+    public CompanyController(CompanyService companyService, CompanyRepository companyRepository) {
         this.companyService = companyService;
+        this.companyRepository = companyRepository;
     }
 
     @GetMapping
@@ -24,6 +26,9 @@ public class CompanyController {
 
     @PostMapping("/create")
     public ResponseEntity<String> createCompany(@RequestBody Company company){
+        if(companyRepository.findByName(company.getName())!=null){
+            return new ResponseEntity<>("company already present" , HttpStatus.BAD_REQUEST);
+        }
         companyService.createCompany(company);
         return new ResponseEntity<>("Successfully added the copmany" , HttpStatus.CREATED);
     }

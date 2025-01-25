@@ -80,17 +80,16 @@ public class JobServiceImplementation implements JobService {
             if (company == null) {
                 company = job.getCompany();
                 companyRepository.save(company);
-                Job newJob = new Job();
-                newJob.setTitle(job.getTitle());
-                newJob.setDescription(job.getDescription());
-                newJob.setMaxSalary(job.getMaxSalary());
-                newJob.setMinSalary(job.getMinSalary());
-                newJob.setLocation(job.getLocation());
-                newJob.setCompany(company);
-
-                jobRepository.save(job);
             }
+            Job newJob = new Job();
+            newJob.setTitle(job.getTitle());
+            newJob.setDescription(job.getDescription());
+            newJob.setMaxSalary(job.getMaxSalary());
+            newJob.setMinSalary(job.getMinSalary());
+            newJob.setLocation(job.getLocation());
+            newJob.setCompany(company);
 
+            jobRepository.save(job);
         }
     }
 }
