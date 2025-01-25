@@ -26,7 +26,16 @@ public class User {
     @Column(length = 300)
     private String description;
 
-    // Getters and Setters
+    private String resumePath;
+
+    public String getResumePath() {
+        return resumePath;
+    }
+
+    public void setResumePath(String resumePath) {
+        this.resumePath = resumePath;
+    }
+
     public Long getId() {
         return id;
     }

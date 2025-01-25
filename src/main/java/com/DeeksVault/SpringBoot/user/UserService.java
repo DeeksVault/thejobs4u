@@ -8,4 +8,5 @@ public interface UserService {
     List<User> getAllUsers();
     User getUser(Long id);
     User updateUser(Long id, User updatedUser);
+    void updateResumePath(Long userId, String resumePath);
 }

@@ -20,19 +20,23 @@ public class UserServiceImplementation implements UserService{
         this.userRepository = userRepository;
     }
 
+    @Override
     public User createUser(User user) {
         return userRepository.save(user);
     }
 
+    @Override
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
+    @Override
     public User getUser(Long id) {
         Optional<User> user = userRepository.findById(id);
         return user.orElseThrow(() -> new RuntimeException("User not found with ID: " + id));
     }
 
+    @Override
     public User updateUser(Long id, User updatedUser) {
         User existingUser = getUser(id); // Fetch the existing user
         existingUser.setName(updatedUser.getName());
@@ -41,6 +45,18 @@ public class UserServiceImplementation implements UserService{
         existingUser.setSkills(updatedUser.getSkills());
         existingUser.setDescription(updatedUser.getDescription());
         return userRepository.save(existingUser);
+    }
+
+    @Override
+    public void updateResumePath(Long userId, String resumePath) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.setResumePath(resumePath);
+            userRepository.save(user);
+        } else {
+            throw new RuntimeException("User not found with ID: " + userId);
+        }
     }
 }
 
