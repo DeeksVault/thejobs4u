@@ -18,6 +18,7 @@ public class Job {
     private String minSalary;
     private String maxSalary;
     private String location;
+    private Integer experience;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "company_id")
@@ -28,13 +29,14 @@ public class Job {
     public Job() {
     }
 
-    public Job(Long id, String title, String description, String location, String maxSalary, String minSalary , LocalDateTime createdDate) {
+    public Job(Long id, String title, String description, String location, String maxSalary, String minSalary, int experience, LocalDateTime createdDate) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.location = location;
         this.maxSalary = maxSalary;
         this.minSalary = minSalary;
+        this.experience = experience;
         this.createdDate = createdDate;
     }
 
@@ -104,5 +106,13 @@ public class Job {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public Integer getExperience() {
+        return experience;
+    }
+
+    public void setExperience(Integer experience) {
+        this.experience = experience;
     }
 }
