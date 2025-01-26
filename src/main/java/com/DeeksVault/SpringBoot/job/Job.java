@@ -3,9 +3,11 @@ package com.DeeksVault.SpringBoot.job;
 
 import com.DeeksVault.SpringBoot.company.Company;
 import jakarta.persistence.*;
+import org.springframework.data.annotation.CreatedDate;
+
+import java.time.LocalDateTime;
 
 @Entity
-//@Table(name = "job_table")
 public class Job {
 
     @Id
@@ -17,8 +19,34 @@ public class Job {
     private String maxSalary;
     private String location;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "company_id")
     private Company company;
+
+    private LocalDateTime createdDate;
+
+    public Job() {
+    }
+
+    public Job(Long id, String title, String description, String location, String maxSalary, String minSalary , LocalDateTime createdDate) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.location = location;
+        this.maxSalary = maxSalary;
+        this.minSalary = minSalary;
+        this.createdDate = createdDate;
+    }
+
+
+
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
+    }
 
     public Company getCompany() {
         return company;
@@ -28,17 +56,7 @@ public class Job {
         this.company = company;
     }
 
-    public Job() {
-    }
 
-    public Job(Long id, String title, String description, String location, String maxSalary, String minSalary) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.location = location;
-        this.maxSalary = maxSalary;
-        this.minSalary = minSalary;
-    }
 
     public String getTitle() {
         return title;

@@ -1,6 +1,8 @@
 package com.DeeksVault.SpringBoot.job;
 
 
+import com.DeeksVault.SpringBoot.company.Company;
+import com.DeeksVault.SpringBoot.company.CompanyRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,9 +14,11 @@ import java.util.List;
 public class JobController {
 
     private JobService jobService;
+    private CompanyRepository companyRepository;
 
-    public JobController(JobService jobService) {
+    public JobController(JobService jobService , CompanyRepository companyRepository) {
         this.jobService = jobService;
+        this.companyRepository=companyRepository;
     }
 
     @GetMapping("/jobs")
@@ -24,6 +28,12 @@ public class JobController {
 
     @PostMapping("/jobs/create")
     public ResponseEntity<String> createJob(@RequestBody Job job){
+        System.out.println("in create job controller");
+//        if(companyRepository.findByName(job.getCompany().getName())==null){
+//            Company company = new Company();
+//            company.setName(job.getCompany().getName());
+//            companyRepository.save(company);
+//        }
         jobService.createJob(job);
         return new ResponseEntity<>("Successfully added the job" , HttpStatus.CREATED);
     }

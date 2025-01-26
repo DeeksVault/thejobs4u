@@ -9,6 +9,7 @@ import com.DeeksVault.SpringBoot.job.JobService;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +33,13 @@ public class JobServiceImplementation implements JobService {
 
     @Override
     public void createJob(Job job) {
+        System.out.println("in create job service");
+        job.setCreatedDate(LocalDateTime.now());
+        System.out.println("date added");
+        Company company = job.getCompany();
+        if (company.getId() == null) {
+            companyRepository.save(company);
+        }
         jobRepository.save(job);
     }
 
