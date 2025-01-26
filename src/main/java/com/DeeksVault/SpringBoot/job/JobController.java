@@ -3,6 +3,7 @@ package com.DeeksVault.SpringBoot.job;
 
 import com.DeeksVault.SpringBoot.company.Company;
 import com.DeeksVault.SpringBoot.company.CompanyRepository;
+import com.DeeksVault.SpringBoot.schedulers.JobCleanupScheduler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +16,12 @@ public class JobController {
 
     private JobService jobService;
     private CompanyRepository companyRepository;
+    JobCleanupScheduler jobCleanupScheduler;
 
-    public JobController(JobService jobService , CompanyRepository companyRepository) {
+    public JobController(JobService jobService , CompanyRepository companyRepository  , JobCleanupScheduler jobCleanupScheduler) {
         this.jobService = jobService;
         this.companyRepository=companyRepository;
+        this.jobCleanupScheduler = jobCleanupScheduler;
     }
 
     @GetMapping("/jobs")
@@ -29,11 +32,6 @@ public class JobController {
     @PostMapping("/jobs/create")
     public ResponseEntity<String> createJob(@RequestBody Job job){
         System.out.println("in create job controller");
-//        if(companyRepository.findByName(job.getCompany().getName())==null){
-//            Company company = new Company();
-//            company.setName(job.getCompany().getName());
-//            companyRepository.save(company);
-//        }
         jobService.createJob(job);
         return new ResponseEntity<>("Successfully added the job" , HttpStatus.CREATED);
     }
@@ -66,5 +64,11 @@ public class JobController {
     public ResponseEntity<String> createManyJobs(@RequestBody List<Job> jobs){
         jobService.createJobs(jobs);
         return null;
+    }
+
+    @GetMapping("jobs/cleanup")
+    public ResponseEntity<String> cleanupJobs(){
+        jobCleanupScheduler.cleanUpOldJobs();
+        return new ResponseEntity<>("Job cleanup triggered successfully!" , HttpStatus.OK);
     }
 }
